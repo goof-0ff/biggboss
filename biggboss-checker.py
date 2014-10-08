@@ -37,11 +37,14 @@ def notify_user(message=None):
     '''
     if not message:
         message = 'Notification!!!'
+    print('-'*len(message))
+    print('-'*(len(message)-6)/2, 'NOTIFICATION', '-'*(len(message)-6)/2)
     print(message)
 
-def check_biggboss_episode(new_episode_pattern=None):
+def check_biggboss_episode(new_episode_pattern=None,verbose=False):
     ''' Check for the latest bigg boss episode
     '''
+    print('Sending request to servers of Colors . . .')
     full_url = 'http://colors.in.com/in/biggboss'
     # Send request
     try:
@@ -55,9 +58,13 @@ def check_biggboss_episode(new_episode_pattern=None):
         print('Reason: ', exep.reason)
     else:
         # everything is fine
+        #if verbose:
+        print('Data received, Decoding . . .')
         the_page = response.read().decode('utf-8')
-        print('Page Received:\n', the_page)
+        if verbose:
+            print('Page Received:\n', the_page)
         # Parse for success or failure
+        print('Checking for new episode')
         if not new_episode_pattern:
             new_episode_pattern = 'october-7th'
         success = re.search(new_episode_pattern, the_page)
@@ -74,11 +81,13 @@ def main():
     parser = ArgumentParser(prog='BiggBoss-checker')
     parser.add_argument("-p", "--pattern", type=str, dest="pattern",
                         help="Search for this pattern instead of default")
+    parser.add_argument("-v", "--verbose", dest="verbosity",
+            action='store_true', default=False, help='Show verbose output')
     args = parser.parse_args()
 
     # Check input
     try:
-        check_biggboss_episode(args.pattern)
+        check_biggboss_episode(args.pattern, verbose=args.verbosity)
     except:
         raise
     return 0
