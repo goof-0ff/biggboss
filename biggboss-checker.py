@@ -37,8 +37,8 @@ def notify_user(message=None):
     '''
     if not message:
         message = 'Notification!!!'
-    print('-'*len(message))
-    print('-'*(len(message)-6)/2, 'NOTIFICATION', '-'*(len(message)-6)/2)
+    #print('-'*len(message))
+    print('-'*int((len(message)-6)/2), 'NOTIFICATION', '-'*int((len(message)-6)/2))
     print(message)
 
 def check_biggboss_episode(new_episode_pattern=None,verbose=False):
