@@ -32,7 +32,6 @@ else:
     import urllib2
     import urlparse
 
-
 def notify_user(message=None):
     ''' Notify the user about a particular event with given message
     '''
@@ -66,16 +65,23 @@ def check_biggboss_episode(new_episode_pattern=None,verbose=False):
             print('Page Received:\n', the_page)
         # Parse for success or failure
         if not new_episode_pattern:
-            #new_episode_pattern = time.strftime('%B' + '-')
-            #new_episode_pattern += str(int(time.strftime('%d')));
+            ### PATTERN used by colors
+            #<li><a title="Bigg Boss 8, Full Episode-8, 29th September, 2014"
+            #href="http://colors.in.com/in/biggboss/videos/bigg-boss-8-full-episode8-29th-september-2014-69087-2.html#nav">
+            #Bigg Boss 8, Full Episode-8, 29th September, 2014</a></li>
+            #Bigg Boss 8, Full Episode-10, October 1st, 2014</a></li>
             new_episode_pattern = time.strftime(r'%B-\d+\w\w').lower()
+            month = time.strftime('%B')
+            new_episode_pattern = r'(Bigg Boss \d+, Full Episode-\d+), ' + month + r' \d+\w\w, 2014';
+            #new_episode_pattern = r'Bigg Boss \d+, Full Episode-\d+'
+
         print('Checking for new episode with pattern:', new_episode_pattern)
         success = re.findall(new_episode_pattern, the_page)
         success_set = sorted(set(success))
         print('Found:')
         for item in success_set:
             print('\t', item)
-        if (time.strftime('%B').lower() in success_set[-1] and
+        if (time.strftime('%B').lower() in success_set[-1].lower() and
                 (str(int(time.strftime('%d'))) in success_set[-1] or
                     str(int(time.strftime('%d'))-1) in success_set[-1])):
             msg = 'Found new episode online'
