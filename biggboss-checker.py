@@ -72,7 +72,7 @@ def check_biggboss_episode(new_episode_pattern=None,verbose=False):
         # everything is fine
         #if verbose:
         print('Data received, Decoding . . .')
-        the_page = response.read().decode('utf-8')
+        the_page = str(response.read()) # More pythonic than .decode('utf-8')
         if verbose:
             print('Page Received:\n', the_page)
         # Parse for success or failure
