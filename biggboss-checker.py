@@ -75,8 +75,9 @@ def check_biggboss_episode(new_episode_pattern=None,verbose=False):
         print('Found:')
         for item in success_set:
             print('\t', item)
-        if (str(int(time.strftime('%d'))-1) in success_set[-1] and
-                time.strftime('%B').lower() in success_set[-1]):
+        if (time.strftime('%B').lower() in success_set[-1] and
+                (str(int(time.strftime('%d'))) in success_set[-1] or
+                    str(int(time.strftime('%d'))-1) in success_set[-1])):
             msg = 'Found new episode online'
             notify_user(msg)
         else:
