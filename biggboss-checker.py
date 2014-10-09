@@ -22,6 +22,7 @@ import platform
 import random
 import re
 import sys
+import time
 
 if sys.version_info >= (3,):
     import urllib.request as urllib2
@@ -64,11 +65,18 @@ def check_biggboss_episode(new_episode_pattern=None,verbose=False):
         if verbose:
             print('Page Received:\n', the_page)
         # Parse for success or failure
-        print('Checking for new episode')
         if not new_episode_pattern:
-            new_episode_pattern = 'october-7th'
-        success = re.search(new_episode_pattern, the_page)
-        if success:
+            #new_episode_pattern = time.strftime('%B' + '-')
+            #new_episode_pattern += str(int(time.strftime('%d')));
+            new_episode_pattern = time.strftime(r'%B-\d+\w\w').lower()
+        print('Checking for new episode with pattern:', new_episode_pattern)
+        success = re.findall(new_episode_pattern, the_page)
+        success_set = sorted(set(success))
+        print('Found:')
+        for item in success_set:
+            print('\t', item)
+        if (str(int(time.strftime('%d'))-1) in success_set[-1] and
+                time.strftime('%B').lower() in success_set[-1]):
             msg = 'Found new episode online'
             notify_user(msg)
         else:
