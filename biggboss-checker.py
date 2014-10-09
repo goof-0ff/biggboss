@@ -84,7 +84,7 @@ def check_biggboss_episode(new_episode_pattern=None,verbose=False):
             #Bigg Boss 8, Full Episode-10, October 1st, 2014</a></li>
             new_episode_pattern = time.strftime(r'%B-\d+\w\w').lower()
             month = time.strftime('%B')
-            new_episode_pattern = r'(Bigg Boss \d+, Full Episode-\d+), ' + month + r' \d+\w\w, 2014';
+            new_episode_pattern = r'Bigg Boss \d+, Full Episode-\d+, ' + month + r' \d+\w\w, 2014';
             #new_episode_pattern = r'Bigg Boss \d+, Full Episode-\d+'
 
         print('Checking for new episode with pattern:', new_episode_pattern)
