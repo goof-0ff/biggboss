@@ -32,6 +32,18 @@ else:
     import urllib2
     import urlparse
 
+
+def atoi(text):
+    return int(text) if text.isdigit() else text
+
+def natural_keys(text):
+    '''
+    alist.sort(key=natural_keys) sorts in human order
+    http://nedbatchelder.com/blog/200712/human_sorting.html
+    (See Toothy's implementation in the comments)
+    '''
+    return [ atoi(c) for c in re.split('(\d+)', text) ]
+
 def notify_user(message=None):
     ''' Notify the user about a particular event with given message
     '''
@@ -77,7 +89,7 @@ def check_biggboss_episode(new_episode_pattern=None,verbose=False):
 
         print('Checking for new episode with pattern:', new_episode_pattern)
         success = re.findall(new_episode_pattern, the_page)
-        success_set = sorted(set(success))
+        success_set = sorted(set(success), key=natural_keys)
         print('Found:')
         for item in success_set:
             print('\t', item)
