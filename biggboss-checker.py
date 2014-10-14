@@ -86,13 +86,9 @@ def get_link(the_page):
         success_set = sorted(set(link_reg), key=natural_keys)
         return success_set[-1]
 
-def check_biggboss_episode(new_episode_pattern=None, verbose=False):
-    ''' Check for the latest bigg boss episode
+def get_episode_list(the_page, new_episode_pattern=None):
+    ''' Get latest episode list from webpage
     '''
-    the_page = get_page_data()
-    if verbose:
-        print('Page Received:\n', the_page)
-    # Parse for success or failure
     if not new_episode_pattern:
         ### PATTERN used by colors
         #<li><a title="Bigg Boss 8, Full Episode-8, 29th September, 2014"
@@ -108,6 +104,17 @@ def check_biggboss_episode(new_episode_pattern=None, verbose=False):
     print('Checking for new episode with pattern:', new_episode_pattern)
     success = re.findall(new_episode_pattern, the_page)
     success_set = sorted(set(success), key=natural_keys)
+    return success_set
+
+
+def check_biggboss_episode(new_episode_pattern=None, verbose=False):
+    ''' Check for the latest bigg boss episode
+    '''
+    the_page = get_page_data()
+    if verbose:
+        print('Page Received:\n', the_page)
+    success_set = get_episode_list(the_page, new_episode_pattern)
+    # Parse for success or failure
     print('Found:')
     for item in success_set:
         print('\t', item)
