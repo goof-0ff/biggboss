@@ -53,9 +53,7 @@ def notify_user(message=None):
     print('-'*int((len(message)-6)/2), 'NOTIFICATION', '-'*int((len(message)-6)/2))
     print(message)
 
-def check_biggboss_episode(new_episode_pattern=None,verbose=False):
-    ''' Check for the latest bigg boss episode
-    '''
+def get_page_data():
     print('Sending request to servers of Colors . . .')
     full_url = 'http://colors.in.com/in/biggboss'
     full_url = 'http://colors.in.com/in/biggboss/videos/episodes'
@@ -74,49 +72,63 @@ def check_biggboss_episode(new_episode_pattern=None,verbose=False):
         #if verbose:
         print('Data received, Decoding . . .')
         the_page = str(response.read()) # More pythonic than .decode('utf-8')
-        if verbose:
-            print('Page Received:\n', the_page)
-        # Parse for success or failure
-        if not new_episode_pattern:
-            ### PATTERN used by colors
-            #<li><a title="Bigg Boss 8, Full Episode-8, 29th September, 2014"
-            #href="http://colors.in.com/in/biggboss/videos/bigg-boss-8-full-episode8-29th-september-2014-69087-2.html#nav">
-            #http://colors.in.com/in/biggboss/videos/bigg-boss-8-full-episode23-october-14th-2014-10101036-2.html#nav
-            #Bigg Boss 8, Full Episode-8, 29th September, 2014</a></li>
-            #Bigg Boss 8, Full Episode-10, October 1st, 2014</a></li>
-            new_episode_pattern = time.strftime(r'%B-\d+\w\w').lower()
-            month = time.strftime('%B')
-            new_episode_pattern = r'Bigg Boss \d+, Full Episode-\d+, ' + month + r' \d+\w\w, 2014';
-            new_link_pattern = r'http://colors.in.com/in/biggboss/videos/bigg-boss-8-full-episode\d\d-' + month.lower() + r'-\d+\w\w-2014.*?.html'
-            #new_episode_pattern = r'Bigg Boss \d+, Full Episode-\d+'
+        return the_page
 
-        print('Checking for new episode with pattern:', new_episode_pattern)
-        success = re.findall(new_episode_pattern, the_page)
-        success_set = sorted(set(success), key=natural_keys)
-        print('Found:')
-        for item in success_set:
-            print('\t', item)
-        current_date = int(time.strftime('%d'))
-        current_hour = int(time.strftime('%H'))
-        current_month = time.strftime('%B')
+def get_link(the_page):
+    ''' Get Latest episode link
+    '''
+    month = time.strftime('%B')
+    new_link_pattern = r'http://colors.in.com/in/biggboss/videos/bigg-boss-8-full-episode\d\d-' + month.lower() + r'-\d+\w\w-2014.*?.html'
+    #print('Checking: ', new_link_pattern)
+    link_reg = re.findall(new_link_pattern, the_page)
+    if link_reg:
+        #print(link_reg.group())
+        success_set = sorted(set(link_reg), key=natural_keys)
+        return success_set[-1]
 
-        if (current_month.lower() in success_set[-1].lower() and (
-                    (str(current_date) in success_set[-1] and
-                        (current_hour >= 21)) or
-                    (str(current_date-1) in success_set[-1] and
-                        (current_hour >= 0 and current_hour < 21))
-                    )
-                ):
-            msg = 'Found new episode online'
-            notify_user(msg)
-            #print('Checking: ', new_link_pattern)
-            link_reg = re.findall(new_link_pattern, the_page)
-            if link_reg:
-                #print(link_reg.group())
-                success_set = sorted(set(link_reg), key=natural_keys)
-                print('Here\'s the link: ', success_set[-1])
-        else:
-            print('No new episode right now')
+def check_biggboss_episode(new_episode_pattern=None, verbose=False):
+    ''' Check for the latest bigg boss episode
+    '''
+    the_page = get_page_data()
+    if verbose:
+        print('Page Received:\n', the_page)
+    # Parse for success or failure
+    if not new_episode_pattern:
+        ### PATTERN used by colors
+        #<li><a title="Bigg Boss 8, Full Episode-8, 29th September, 2014"
+        #href="http://colors.in.com/in/biggboss/videos/bigg-boss-8-full-episode8-29th-september-2014-69087-2.html#nav">
+        #http://colors.in.com/in/biggboss/videos/bigg-boss-8-full-episode23-october-14th-2014-10101036-2.html#nav
+        #Bigg Boss 8, Full Episode-8, 29th September, 2014</a></li>
+        #Bigg Boss 8, Full Episode-10, October 1st, 2014</a></li>
+        new_episode_pattern = time.strftime(r'%B-\d+\w\w').lower()
+        month = time.strftime('%B')
+        new_episode_pattern = r'Bigg Boss \d+, Full Episode-\d+, ' + month + r' \d+\w\w, 2014';
+        #new_episode_pattern = r'Bigg Boss \d+, Full Episode-\d+'
+
+    print('Checking for new episode with pattern:', new_episode_pattern)
+    success = re.findall(new_episode_pattern, the_page)
+    success_set = sorted(set(success), key=natural_keys)
+    print('Found:')
+    for item in success_set:
+        print('\t', item)
+    current_date = int(time.strftime('%d'))
+    current_hour = int(time.strftime('%H'))
+    current_month = time.strftime('%B')
+
+    if (current_month.lower() in success_set[-1].lower() and (
+                (str(current_date) in success_set[-1] and
+                    (current_hour >= 21)) or
+                (str(current_date-1) in success_set[-1] and
+                    (current_hour >= 0 and current_hour < 21))
+                )
+            ):
+        msg = 'Found new episode online'
+        notify_user(msg)
+        latest_link = get_link(the_page)
+        if latest_link:
+            print('Here\'s the link: ', latest_link)
+    else:
+        print('No new episode right now')
 
 def main():
     ''' Main function - Parse command line arguments
