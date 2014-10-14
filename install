@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+#   Copying and distribution of this file, with or without modification,
+#   are permitted in any medium without royalty provided the copyright
+#   notice and this notice are preserved.  This file is offered as-is,
+#   without any warranty.
+
+filename="biggboss-checker.py"
+install_location="/usr/local/bin/biggboss"
+
+#Uninstall option
+if test "$1" == "--uninstall"
+then
+    echo "About to uninstall BiggBoss"
+    echo "Are you sure ? <Y/n>"
+    read sure
+    if test sure == 'Y'
+    then
+        sudo rm -f "$install_location"
+        exit 0
+    fi
+fi
+
+#Copy file
+sudo cp -f  $filename $install_location
+if [ $? == 0 ]; then
+    echo 'Installation Successful.';
+fi
+
