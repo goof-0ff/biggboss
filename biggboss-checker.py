@@ -58,6 +58,7 @@ def check_biggboss_episode(new_episode_pattern=None,verbose=False):
     '''
     print('Sending request to servers of Colors . . .')
     full_url = 'http://colors.in.com/in/biggboss'
+    full_url = 'http://colors.in.com/in/biggboss/videos/episodes'
     # Send request
     try:
         #res.geturl(), .url=str, .status=200, .info=200, .msg=OK,
@@ -80,11 +81,13 @@ def check_biggboss_episode(new_episode_pattern=None,verbose=False):
             ### PATTERN used by colors
             #<li><a title="Bigg Boss 8, Full Episode-8, 29th September, 2014"
             #href="http://colors.in.com/in/biggboss/videos/bigg-boss-8-full-episode8-29th-september-2014-69087-2.html#nav">
+            #http://colors.in.com/in/biggboss/videos/bigg-boss-8-full-episode23-october-14th-2014-10101036-2.html#nav
             #Bigg Boss 8, Full Episode-8, 29th September, 2014</a></li>
             #Bigg Boss 8, Full Episode-10, October 1st, 2014</a></li>
             new_episode_pattern = time.strftime(r'%B-\d+\w\w').lower()
             month = time.strftime('%B')
             new_episode_pattern = r'Bigg Boss \d+, Full Episode-\d+, ' + month + r' \d+\w\w, 2014';
+            new_link_pattern = r'http://colors.in.com/in/biggboss/videos/bigg-boss-8-full-episode\d\d-' + month.lower() + r'-\d+\w\w-2014.*?.html'
             #new_episode_pattern = r'Bigg Boss \d+, Full Episode-\d+'
 
         print('Checking for new episode with pattern:', new_episode_pattern)
@@ -106,6 +109,12 @@ def check_biggboss_episode(new_episode_pattern=None,verbose=False):
                 ):
             msg = 'Found new episode online'
             notify_user(msg)
+            #print('Checking: ', new_link_pattern)
+            link_reg = re.findall(new_link_pattern, the_page)
+            if link_reg:
+                #print(link_reg.group())
+                success_set = sorted(set(link_reg), key=natural_keys)
+                print('Here\'s the link: ', success_set[-1])
         else:
             print('No new episode right now')
 
