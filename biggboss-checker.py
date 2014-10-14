@@ -71,22 +71,22 @@ def get_page_data():
         # everything is fine
         #if verbose:
         print('Data received, Decoding . . .')
-        the_page = str(response.read()) # More pythonic than .decode('utf-8')
-        return the_page
+        web_page = str(response.read()) # More pythonic than .decode('utf-8')
+        return web_page
 
-def get_link(the_page):
+def get_link(web_page):
     ''' Get Latest episode link
     '''
     month = time.strftime('%B')
     new_link_pattern = r'http://colors.in.com/in/biggboss/videos/bigg-boss-8-full-episode\d\d-' + month.lower() + r'-\d+\w\w-2014.*?.html'
     #print('Checking: ', new_link_pattern)
-    link_reg = re.findall(new_link_pattern, the_page)
+    link_reg = re.findall(new_link_pattern, web_page)
     if link_reg:
         #print(link_reg.group())
         success_set = sorted(set(link_reg), key=natural_keys)
         return success_set[-1]
 
-def get_episode_list(the_page, new_episode_pattern=None):
+def get_episode_list(web_page, new_episode_pattern=None):
     ''' Get latest episode list from webpage
     '''
     if not new_episode_pattern:
@@ -102,7 +102,7 @@ def get_episode_list(the_page, new_episode_pattern=None):
         #new_episode_pattern = r'Bigg Boss \d+, Full Episode-\d+'
 
     print('Checking for new episode with pattern:', new_episode_pattern)
-    success = re.findall(new_episode_pattern, the_page)
+    success = re.findall(new_episode_pattern, web_page)
     success_set = sorted(set(success), key=natural_keys)
     return success_set
 
@@ -110,10 +110,10 @@ def get_episode_list(the_page, new_episode_pattern=None):
 def check_biggboss_episode(new_episode_pattern=None, verbose=False):
     ''' Check for the latest bigg boss episode
     '''
-    the_page = get_page_data()
+    web_page = get_page_data()
     if verbose:
-        print('Page Received:\n', the_page)
-    success_set = get_episode_list(the_page, new_episode_pattern)
+        print('Page Received:\n', web_page)
+    success_set = get_episode_list(web_page, new_episode_pattern)
     # Parse for success or failure
     print('Found:')
     for item in success_set:
@@ -131,7 +131,7 @@ def check_biggboss_episode(new_episode_pattern=None, verbose=False):
             ):
         msg = 'Found new episode online'
         notify_user(msg)
-        latest_link = get_link(the_page)
+        latest_link = get_link(web_page)
         if latest_link:
             print('Here\'s the link: ', latest_link)
     else:
