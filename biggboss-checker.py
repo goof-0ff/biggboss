@@ -42,7 +42,7 @@ def natural_keys(text):
     http://nedbatchelder.com/blog/200712/human_sorting.html
     (See Toothy's implementation in the comments)
     '''
-    return [ atoi(c) for c in re.split('(\d+)', text) ]
+    return [atoi(c) for c in re.split('(\d+)', text)]
 
 def notify_user(message=None):
     ''' Notify the user about a particular event with given message
@@ -54,6 +54,8 @@ def notify_user(message=None):
     print(message)
 
 def get_page_data():
+    ''' Get page data as string from server
+    '''
     print('Sending request to servers of Colors . . .')
     full_url = 'http://colors.in.com/in/biggboss'
     full_url = 'http://colors.in.com/in/biggboss/videos/episodes'
@@ -124,9 +126,9 @@ def check_biggboss_episode(new_episode_pattern=None, verbose=False):
 
     if (current_month.lower() in success_set[-1].lower() and (
                 (str(current_date) in success_set[-1] and
-                    (current_hour >= 21)) or
+                    (current_hour >= 20)) or
                 (str(current_date-1) in success_set[-1] and
-                    (current_hour >= 0 and current_hour < 21))
+                    (current_hour >= 0 and current_hour < 20))
                 )
             ):
         msg = 'Found new episode online'
