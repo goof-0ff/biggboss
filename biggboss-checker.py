@@ -92,8 +92,8 @@ def get_episode_list(the_page, new_episode_pattern=None):
     if not new_episode_pattern:
         ### PATTERN used by colors
         #<li><a title="Bigg Boss 8, Full Episode-8, 29th September, 2014"
-        #href="http://colors.in.com/in/biggboss/videos/bigg-boss-8-full-episode8-29th-september-2014-69087-2.html#nav">
-        #http://colors.in.com/in/biggboss/videos/bigg-boss-8-full-episode23-october-14th-2014-10101036-2.html#nav
+        #href="http://colors.in.com/in/biggboss/videos/bigg-boss-8-full-episode8-29th-october-2014-69087-2.html#nav">
+        #http://colors.in.com/in/biggboss/videos/bigg-boss-8-full-episode23-november-14th-2014-10101036-2.html#nav
         #Bigg Boss 8, Full Episode-8, 29th September, 2014</a></li>
         #Bigg Boss 8, Full Episode-10, October 1st, 2014</a></li>
         new_episode_pattern = time.strftime(r'%B-\d+\w\w').lower()
