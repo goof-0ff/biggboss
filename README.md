@@ -12,3 +12,7 @@ To check for latest episode:
 To see the man page:  
 ``` ./biggboss-checker.py --help ```  
 ``` ./biggboss-checker.py --verbose ```  
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/shubhamchaudhary/biggboss/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
